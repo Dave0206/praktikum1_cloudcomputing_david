@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTM Digital - David Febrian Pramusti | Telkom University Jakarta</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        telkom: {
+                            red: '#E11D48',
+                            darkred: '#9F1239',
+                            crimson: '#BE123C',
+                            gold: '#F59E0B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Background & Holographic Effects */
+        body {
+            background-color: #090A0F;
+            color: #F8FAFC;
+            overflow-x: hidden;
+        }
+
+        /* Animated Aurora Mesh Background */
+        .aurora-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 20%, rgba(225, 29, 72, 0.22) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(190, 18, 60, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.6) 0%, #090A0F 100%);
+        }
+
+        .grid-pattern {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* 3D Card Container & Perspective */
+        .card-perspective {
+            perspective: 1200px;
+        }
+
+        .ktm-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            background: linear-gradient(135deg, rgba(24, 24, 32, 0.92) 0%, rgba(15, 15, 22, 0.96) 100%);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.85),
+                0 0 35px -5px rgba(225, 29, 72, 0.25),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Holographic Glare Overlay */
+        .holo-glare {
+            position: absolute;
+            inset: 0;
+            border-radius: 1.5rem;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.14) 0%,
+                rgba(225, 29, 72, 0.08) 25%,
+                transparent 60%
+            );
+            pointer-events: none;
+            z-index: 20;
+            mix-blend-mode: screen;
+        }
+
+        /* Holographic Rainbow Foil Strip */
+        .holo-strip {
+            background: linear-gradient(
+                90deg,
+                #ff0055,
+                #ff9900,
+                #ffee00,
+                #00ff88,
+                #00ccff,
+                #8800ff,
+                #ff0055
+            );
+            background-size: 200% 100%;
+            animation: holoShift 4s linear infinite;
+            opacity: 0.75;
+        }
+
+        @keyframes holoShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Surprise Shake & Jumpscare Animation */
+        @keyframes jumpscarePop {
+            0% { transform: scale(0.2) rotate(-8deg); opacity: 0; }
+            45% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+            70% { transform: scale(0.97) rotate(-1deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes alarmPulse {
+            0%, 100% { box-shadow: inset 0 0 80px rgba(225, 29, 72, 0.75); }
+            50% { box-shadow: inset 0 0 25px rgba(225, 29, 72, 0.15); }
+        }
+
+        .animate-jumpscare {
+            animation: jumpscarePop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .alarm-screen {
+            animation: alarmPulse 0.8s ease-in-out infinite;
+        }
+
+        /* Smooth 1-Second Display & Fade Out for Stop-It Image */
+        .stop-it-box {
+            transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+        }
+
+        .stop-it-visible {
+            opacity: 1 !important;
+            transform: scale(1) translateY(0) !important;
+            pointer-events: auto;
+        }
+
+        .stop-it-fadeout {
+            opacity: 0 !important;
+            transform: scale(0.88) translateY(12px) !important;
+            pointer-events: none;
+        }
+
+        /* Barcode Pattern Generator */
+        .barcode-bars {
+            background: repeating-linear-gradient(
+                90deg,
+                #e2e8f0 0px,
+                #e2e8f0 2px,
+                transparent 2px,
+                transparent 5px,
+                #e2e8f0 5px,
+                #e2e8f0 6px,
+                transparent 6px,
+                transparent 9px,
+                #e2e8f0 9px,
+                #e2e8f0 13px,
+                transparent 13px,
+                transparent 15px
+            );
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-rose-600 selection:text-white">
+
+    <!-- Background Layers -->
+    <div class="aurora-bg grid-pattern"></div>
+
+    <!-- Top Navigation / Status Header -->
+    <header class="w-full max-w-5xl mx-auto px-4 pt-6 pb-2 flex items-center justify-between z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-600 to-red-800 flex items-center justify-center shadow-lg shadow-rose-600/30 border border-rose-400/30">
+                <i class="fa-solid fa-building-columns text-white text-lg"></i>
+            </div>
+            <div>
+                <span class="text-xs font-mono uppercase tracking-widest text-rose-400 block">Cloud Computing Modul 01</span>
+                <h1 class="text-sm sm:text-base font-bold text-white tracking-tight">Portal Identitas Mahasiswa Digital</h1>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-full text-xs font-mono text-slate-300 backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 -ml-3"></span>
+            <span>VERCEL CLOUD READY</span>
+        </div>
+    </header>
+
+    <!-- Main Content: Student ID Card (KTM) -->
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-8 z-10">
+        
+        <div class="card-perspective w-full max-w-xl">
+            <!-- 3D Interactive KTM Card -->
+            <div id="ktmCard" class="ktm-card relative rounded-3xl border border-white/15 overflow-hidden p-6 sm:p-8 transition-all duration-200">
+                
+                <!-- Interactive Glare Layer -->
+                <div id="holoGlare" class="holo-glare"></div>
+
+                <!-- Top Decorative Red Accent Ribbon -->
+                <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-rose-600 via-red-500 to-amber-500"></div>
+                
+                <!-- Ambient Corner Glow -->
+                <div class="absolute -top-24 -right-24 w-52 h-52 bg-rose-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-52 h-52 bg-red-800/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Card Header: University Branding -->
+                <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-5 relative z-10">
+                    <div class="flex items-center gap-3.5">
+                        <!-- Stylized Telkom Shield Emblem -->
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-rose-600 via-red-700 to-slate-900 p-0.5 shadow-xl shadow-rose-900/40 flex-shrink-0">
+                            <div class="w-full h-full bg-slate-950/90 rounded-[14px] flex flex-col items-center justify-center border border-rose-500/30">
+                                <i class="fa-solid fa-graduation-cap text-rose-500 text-lg sm:text-xl"></i>
+                                <span class="text-[8px] font-mono font-bold tracking-tighter text-white mt-0.5">Tel-U</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 rounded-md border border-rose-500/30">
+                                    Kampus Jakarta
+                                </span>
+                                <span class="text-[11px] font-mono text-slate-400">FRI</span>
+                            </div>
+                            <h2 class="text-base sm:text-xl font-extrabold tracking-tight text-white mt-1">
+                                TELKOM UNIVERSITY JAKARTA
+                            </h2>
+                            <p class="text-[11px] sm:text-xs font-mono uppercase tracking-widest text-slate-400">
+                                Kartu Tanda Mahasiswa &bull; Student ID Card
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Smart Card Gold Chip -->
+                    <div class="hidden sm:flex flex-col items-end">
+                        <div class="w-11 h-8 rounded-md bg-gradient-to-br from-amber-200 via-yellow-400 to-amber-600 p-1 shadow-inner border border-amber-300/60 flex items-center justify-center">
+                            <div class="w-full h-full border border-amber-900/40 rounded-sm grid grid-cols-3 gap-0.5 opacity-75">
+                                <div class="border-r border-amber-900/40"></div>
+                                <div class="border-r border-amber-900/40"></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-mono text-slate-500 mt-1">NFC ID-2026</span>
+                    </div>
+                </div>
+
+                <!-- Card Body: Photo & Student Information -->
+                <div class="mt-6 grid grid-cols-1 sm:grid-cols-12 gap-6 items-center relative z-10">
+                    
+                    <!-- Left Column: Student Avatar / Photo -->
+                    <div class="sm:col-span-4 flex flex-col items-center">
+                        <div class="relative group cursor-pointer" onclick="document.getElementById('uploadProfileInput').click()" title="Klik untuk mengganti foto profil">
+                            <div class="w-32 h-36 sm:w-36 sm:h-40 rounded-2xl p-1 bg-gradient-to-tr from-rose-600 via-red-500 to-slate-700 shadow-xl shadow-rose-950/60">
+                                <div class="w-full h-full rounded-xl overflow-hidden bg-slate-900 relative flex items-center justify-center">
+                                    <!-- Default Stylish Student Avatar SVG / Image -->
+                                    <img 
+                                        id="studentPhoto" 
+                                        src="https://api.dicebear.com/7.x/notionists/svg?seed=DavidFebrianPramusti&backgroundColor=b91c1c,1e293b" 
+                                        alt="Foto David Febrian Pramusti"
+                                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                        onerror="this.src='https://placehold.co/300x360/1e293b/f43f5e?text=DFP'"
+                                    >
+                                    <!-- Hover Change Photo Overlay -->
+                                    <div class="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-2">
+                                        <i class="fa-solid fa-camera text-rose-400 text-lg mb-1"></i>
+                                        <span class="text-[10px] font-medium text-white leading-tight">Ganti Foto</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Student Details -->
+                    <div class="sm:col-span-8 space-y-3.5 text-center sm:text-left mt-2 sm:mt-0">
+                        <!-- Nama Lengkap -->
+                        <div class="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3 backdrop-blur-sm">
+                            <span class="text-[10px] font-mono uppercase tracking-wider text-rose-400 block">Nama Mahasiswa</span>
+                            <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-wide mt-0.5">
+                                David Febrian Pramusti
+                            </h3>
+                        </div>
+
+                        <!-- NIM & Program Studi Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Nomor Induk Mahasiswa</span>
+                                <div class="flex items-center justify-center sm:justify-start gap-2 mt-0.5">
+                                    <span id="nimText" class="text-sm sm:text-base font-mono font-bold text-amber-400 tracking-wider">102042400109</span>
+                                    <button onclick="copyNIM()" class="text-slate-400 hover:text-white transition-colors text-xs" title="Salin NIM">
+                                        <i id="copyIcon" class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Program Studi</span>
+                                <p class="text-sm sm:text-base font-bold text-slate-100 mt-0.5 flex items-center justify-center sm:justify-start gap-1.5">
+                                    <i class="fa-solid fa-laptop-code text-rose-400 text-xs"></i>
+                                    S1 Sistem Informasi
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Universitas -->
+                        <div class="bg-white/[0.03] border border-white/[0.07] rounded-xl p-3 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Institusi Pendidikan</span>
+                                <p class="text-xs sm:text-sm font-semibold text-slate-200 mt-0.5">
+                                    Universitas Telkom University Jakarta
+                                </p>
+                            </div>
+                            <div class="text-right font-mono text-[10px] text-slate-400 hidden sm:block">
+                                <div>ANGKATAN</div>
+                                <div class="text-white font-bold text-xs">2024</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Holographic Foil Security Line -->
+                <div class="mt-6 h-1 w-full rounded-full holo-strip"></div>
+
+                <!-- Card Footer: Barcode & "Lihat CV Saya" Button -->
+                <div class="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+                    <!-- Decorative Barcode & Serial -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-28 h-8 barcode-bars opacity-80 rounded-sm"></div>
+                        <div class="text-[10px] font-mono text-slate-400 leading-tight">
+                            <div class="text-slate-300 font-semibold">KTMD-102042400109</div>
+                            <div>VALID THRU: 08/2028</div>
+                        </div>
+                    </div>
+
+                    <!-- Main Interactive CTA Button: "Lihat CV Saya" -->
+                    <button 
+                        id="btnLihatCV"
+                        onclick="triggerSurpriseSequence()"
+                        class="w-full sm:w-auto group relative inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-rose-600 via-red-600 to-rose-700 hover:from-rose-500 hover:to-red-600 shadow-lg shadow-rose-600/40 hover:shadow-rose-500/60 border border-rose-400/40 transition-all duration-200 active:scale-95 overflow-hidden"
+                    >
+                        <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+                        <i class="fa-solid fa-file-invoice text-base group-hover:rotate-6 transition-transform"></i>
+                        <span>Lihat CV Saya</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Toast Notification for Copy NIM -->
+        <div id="toastNotification" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900/95 border border-emerald-500/40 text-emerald-300 px-4 py-2 rounded-full text-xs font-mono shadow-xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
+            <i class="fa-solid fa-circle-check"></i>
+            <span id="toastMessage">NIM 102042400109 berhasil disalin!</span>
+        </div>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- SURPRISE OVERLAY MODAL (JOB APPLICATION + STOP-IT + 14s GURU AUDIO) -->
+    <!-- =================================================================== -->
+    <div id="surpriseOverlay" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex-col items-center justify-center p-4 sm:p-6 alarm-screen select-none">
+        
+        <!-- Top Countdown & Audio Status Bar -->
+        <div class="w-full max-w-4xl mb-4 bg-slate-900/90 border border-rose-500/40 rounded-2xl p-3 sm:px-5 flex flex-wrap items-center justify-between gap-3 shadow-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-rose-600 flex items-center justify-center text-white animate-bounce">
+                    <i class="fa-solid fa-volume-high"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-mono uppercase tracking-wider text-rose-400 font-bold">MEMUTAR: GURU-HENTIKAN.MP3</span>
+                        <span id="shockBadge" class="hidden px-2 py-0.5 text-[10px] font-mono font-bold bg-amber-500 text-slate-950 rounded animate-pulse">
+                            ⚡ SHOCKED SFX (1s)
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-300">Kejutan otomatis berakhir setelah durasi audio 14 detik selesai</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 ml-auto">
+                <div class="text-right font-mono">
+                    <span class="text-[10px] text-slate-400 block">SISA WAKTU</span>
+                    <span id="countdownTimer" class="text-lg font-extrabold text-rose-400">14.0s</span>
+                </div>
+                <button 
+                    onclick="stopSurpriseSequence()" 
+                    class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-700 text-slate-300 hover:text-white text-xs font-mono border border-slate-700 transition-colors"
+                    title="Hentikan Sekarang"
+                >
+                    <i class="fa-solid fa-xmark mr-1"></i>Tutup
+                </button>
+            </div>
+
+            <!-- 14-Second Progress Bar -->
+            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div id="surpriseProgressBar" class="h-full bg-gradient-to-r from-rose-600 via-amber-500 to-rose-500 w-full transition-none"></div>
+            </div>
+        </div>
+
+        <!-- Stage Container: Job Application & Side-by-Side Stop-It Image -->
+        <div class="w-full max-w-5xl flex-1 flex flex-col md:flex-row items-center justify-center gap-6 overflow-y-auto py-2">
+            
+            <!-- 1. JOB APPLICATION IMAGE CONTAINER (Stays for full 14 seconds) -->
+            <div id="jobAppContainer" class="animate-jumpscare relative bg-white text-slate-900 rounded-2xl shadow-2xl border-4 border-rose-600 overflow-hidden w-full max-w-md md:max-w-lg flex-shrink-0">
+                
+                <!-- Custom / Local Image (`job Aplication.png`) -->
+                <img 
+                    id="img-job-app" 
+                    src="job%20Aplication.png" 
+                    alt="Job Application Form" 
+                    class="w-full max-h-[70vh] object-contain hidden"
+                    onload="this.classList.remove('hidden'); document.getElementById('fallbackJobApp').classList.add('hidden');"
+                    onerror="this.classList.add('hidden'); document.getElementById('fallbackJobApp').classList.remove('hidden');"
+                >
+
+                <!-- Built-in High-Effort Fallback Job Application Form (Shown if job Aplication.png is not uploaded yet) -->
+                <div id="fallbackJobApp" class="p-5 sm:p-6 bg-stone-100 text-slate-900 font-serif">
+                    <div class="border-b-4 border-slate-900 pb-2 mb-3 flex items-center justify-between">
+                        <div>
+                            <span class="bg-rose-600 text-white font-sans font-extrabold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">⚠️ JUMPSCARE PERINGATAN</span>
+                            <h2 class="text-2xl sm:text-3xl font-black tracking-tight uppercase text-slate-900 mt-1">JOB APPLICATION</h2>
+                            <p class="text-xs font-sans text-slate-600 font-semibold">FORMULIR LAMARAN PEKERJAAN (WAJIB DIISI SEKARANG)</p>
+                        </div>
+                        <div class="w-12 h-12 border-2 border-slate-900 flex items-center justify-center font-sans font-black text-xs text-center leading-none p-1">
+                            PAS FOTO 3x4
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 font-sans text-xs">
+                        <div class="bg-white border border-slate-400 p-2 rounded">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block">1. Nama Lengkap Pelamar:</span>
+                            <span class="font-mono font-bold text-sm text-slate-900">DAVID FEBRIAN PRAMUSTI</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-white border border-slate-400 p-2 rounded">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase block">2. NIM / ID:</span>
+                                <span class="font-mono font-bold text-slate-900">102042400109</span>
+                            </div>
+                            <div class="bg-white border border-slate-400 p-2 rounded">
+                                <span class="text-[10px] font-bold text-slate-500 uppercase block">3. Program Studi:</span>
+                                <span class="font-bold text-slate-900">S1 Sistem Informasi</span>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-slate-400 p-2 rounded">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block">4. Pengalaman Kerja:</span>
+                            <div class="flex items-center gap-3 mt-1 font-semibold">
+                                <label class="flex items-center gap-1"><input type="checkbox" checked onclick="return false;"> Fresh Graduate</label>
+                                <label class="flex items-center gap-1"><input type="checkbox" checked onclick="return false;"> Siap Lembur 24/7</label>
+                            </div>
+                        </div>
+                        <div class="bg-amber-50 border-2 border-dashed border-rose-600 p-2.5 rounded text-center">
+                            <p class="font-extrabold text-rose-700 text-sm uppercase">🚨 SEGERA CARI KERJA / MAGANG! 🚨</p>
+                            <p class="text-[11px] text-slate-700 mt-0.5">Tanda tangan di bawah ini menyatakan Anda siap kerja besok pagi pukul 07.00 WIB.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. SIDE-BY-SIDE STOP-IT IMAGE CONTAINER (Appears for 1 second then fades out!) -->
+            <div 
+                id="stopItWrapper" 
+                class="stop-it-box stop-it-fadeout w-full max-w-xs sm:max-w-sm bg-slate-900 border-4 border-amber-400 rounded-2xl shadow-2xl overflow-hidden flex-shrink-0 relative"
+            >
+
+                <!-- Custom / Local Image (`stop-it.png`) -->
+                <img 
+                    id="img-stop-it" 
+                    src="stop-it.png" 
+                    alt="Stop It Meme" 
+                    class="w-full max-h-[55vh] object-contain hidden"
+                    onload="this.classList.remove('hidden'); document.getElementById('fallbackStopIt').classList.add('hidden');"
+                    onerror="this.classList.add('hidden'); document.getElementById('fallbackStopIt').classList.remove('hidden');"
+                >
+
+                <!-- Built-in Fallback Stop-It Meme Graphic -->
+                <div id="fallbackStopIt" class="p-6 flex flex-col items-center justify-center text-center bg-gradient-to-b from-slate-900 to-rose-950 text-white min-h-[260px]">
+                    <div class="w-20 h-20 rounded-full bg-rose-600/30 border-2 border-rose-400 flex items-center justify-center text-4xl mb-3 animate-ping" style="animation-duration: 0.6s;">
+                        ✋😨
+                    </div>
+                    <h3 class="text-3xl font-black tracking-tight text-amber-400 uppercase drop-shadow">
+                        STOP IT!!
+                    </h3>
+                    <p class="text-base font-extrabold text-white mt-1 uppercase tracking-wide">
+                        "GURU, HENTIKAN!!"
+                    </p>
+                    <p class="text-xs font-mono text-rose-300 mt-2 bg-black/40 px-3 py-1 rounded-full border border-rose-500/30">
+                        Jangan kasih liat Job Application dulu! 😭
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- AUDIO ELEMENTS (Supports local repo files + custom upload)          -->
+    <!-- =================================================================== -->
+    <audio id="audio-guru" src="guru-hentikan.mp3" preload="auto"></audio>
+    <audio id="audio-shocked" src="shocked-sound-effect.mp3" preload="auto"></audio>
+
+    <!-- Hidden File Input for Quick Profile Photo Upload -->
+    <input type="file" id="uploadProfileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event, 'studentPhoto')">
+
+    <!-- =================================================================== -->
+    <!-- FLOATING CUSTOM MEDIA CONFIGURATOR (Upload custom images & sounds)  -->
+    <!-- =================================================================== -->
+    <div class="fixed bottom-4 right-4 z-40">
+        <!-- Toggle Drawer Button -->
+        <button 
+            onclick="toggleMediaDrawer()" 
+            class="flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700/80 shadow-xl backdrop-blur-md text-xs font-mono transition-all hover:border-rose-500/50"
+        >
+            <i class="fa-solid fa-sliders text-rose-500"></i>
+            <span>Custom File Media & Audio</span>
+        </button>
+
+        <!-- Customizer Panel -->
+        <div id="mediaDrawer" class="hidden absolute bottom-14 right-0 w-80 sm:w-96 bg-slate-900/95 border border-slate-700 rounded-2xl p-4 shadow-2xl backdrop-blur-xl text-xs space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                <div>
+                    <h4 class="font-bold text-white text-sm flex items-center gap-1.5">
+                        <i class="fa-solid fa-photo-film text-rose-500"></i>
+                        Pengaturan File Kejutan
+                    </h4>
+                    <p class="text-[11px] text-slate-400">Uji langsung file gambar/suara dari perangkatmu</p>
+                </div>
+                <button onclick="toggleMediaDrawer()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+                <!-- 1. Job Application Image -->
+                <div class="bg-slate-950/70 border border-slate-800 p-2.5 rounded-xl">
+                    <label class="font-semibold text-slate-200 block mb-1">
+                        1. Gambar Job Application <code class="text-rose-400">(job Aplication.png)</code>
+                    </label>
+                    <input type="file" accept="image/*" onchange="handleFileUpload(event, 'img-job-app')" class="w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-600/20 file:text-rose-300 hover:file:bg-rose-600/30">
+                </div>
+
+                <!-- 2. Stop-It Image -->
+                <div class="bg-slate-950/70 border border-slate-800 p-2.5 rounded-xl">
+                    <label class="font-semibold text-slate-200 block mb-1">
+                        2. Gambar Stop-It (Muncul 1d) <code class="text-amber-400">(stop-it.png)</code>
+                    </label>
+                    <input type="file" accept="image/*" onchange="handleFileUpload(event, 'img-stop-it')" class="w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500/20 file:text-amber-300 hover:file:bg-amber-500/30">
+                </div>
+
+                <!-- 3. Audio Guru Hentikan (14s) -->
+                <div class="bg-slate-950/70 border border-slate-800 p-2.5 rounded-xl">
+                    <label class="font-semibold text-slate-200 block mb-1">
+                        3. Sound Guru Hentikan (14 Detik) <code class="text-rose-400">(guru-hentikan.mp3)</code>
+                    </label>
+                    <input type="file" accept="audio/*" onchange="handleAudioUpload(event, 'audio-guru', 'guruStatus')" class="w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-600/20 file:text-rose-300 hover:file:bg-rose-600/30">
+                    <span id="guruStatus" class="text-[10px] font-mono text-slate-500 mt-1 block">Default: `guru-hentikan.mp3` / Synth Fallback</span>
+                </div>
+
+                <!-- 4. Audio Shocked Sound Effect (1s) -->
+                <div class="bg-slate-950/70 border border-slate-800 p-2.5 rounded-xl">
+                    <label class="font-semibold text-slate-200 block mb-1">
+                        4. Shocked Sound Effect (1 Detik) <code class="text-amber-400">(shocked-sound-effect.mp3)</code>
+                    </label>
+                    <input type="file" accept="audio/*" onchange="handleAudioUpload(event, 'audio-shocked', 'shockedStatus')" class="w-full text-[11px] text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500/20 file:text-amber-300 hover:file:bg-amber-500/30">
+                    <span id="shockedStatus" class="text-[10px] font-mono text-slate-500 mt-1 block">Default: `shocked-sound-effect.mp3` / Synth Fallback</span>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 leading-relaxed">
+                💡 <strong>Tips Deploy Vercel:</strong> Simpan file <code class="text-slate-200">job Aplication.png</code>, <code class="text-slate-200">stop-it.png</code>, <code class="text-slate-200">guru-hentikan.mp3</code>, dan <code class="text-slate-200">shocked-sound-effect.mp3</code> satu folder dengan <code class="text-slate-200">index.html</code> di GitHub.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-4 text-xs font-mono text-slate-500 z-10">
+        David Febrian Pramusti (102042400109) &bull; S1 Sistem Informasi &bull; Telkom University Jakarta
+    </footer>
+
+    <!-- =================================================================== -->
+    <!-- JAVASCRIPT: 3D CARD TILT & 14s SURPRISE TIMELINE LOGIC              -->
+    <!-- =================================================================== -->
+    <script>
+        // --- 1. 3D INTERACTIVE TILT EFFECT ON KTM CARD ---
+        const ktmCard = document.getElementById('ktmCard');
+        const holoGlare = document.getElementById('holoGlare');
+
+        ktmCard.addEventListener('mousemove', (e) => {
+            const rect = ktmCard.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -7;
+            const rotateY = ((x - centerX) / centerX) * 7;
+
+            ktmCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            holoGlare.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+            holoGlare.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+        });
+
+        ktmCard.addEventListener('mouseleave', () => {
+            ktmCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        });
+
+        // --- 2. COPY NIM TO CLIPBOARD ---
+        function copyNIM() {
+            const nim = "102042400109";
+            const tempInput = document.createElement("textarea");
+            tempInput.value = nim;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const toast = document.getElementById('toastNotification');
+            const icon = document.getElementById('copyIcon');
+            icon.className = "fa-solid fa-check text-emerald-400";
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+                icon.className = "fa-regular fa-copy";
+            }, 2200);
+        }
+
+        // --- 3. FILE UPLOAD HANDLERS FOR CUSTOM TESTING ---
+        function toggleMediaDrawer() {
+            const drawer = document.getElementById('mediaDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function handleFileUpload(event, targetImgId) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            const imgEl = document.getElementById(targetImgId);
+            imgEl.src = url;
+            imgEl.classList.remove('hidden');
+
+            if (targetImgId === 'img-job-app') {
+                document.getElementById('fallbackJobApp').classList.add('hidden');
+            } else if (targetImgId === 'img-stop-it') {
+                document.getElementById('fallbackStopIt').classList.add('hidden');
+            }
+        }
+
+        let customGuruLoaded = false;
+        let customShockedLoaded = false;
+
+        function handleAudioUpload(event, targetAudioId, statusId) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            const audioEl = document.getElementById(targetAudioId);
+            audioEl.src = url;
+            audioEl.load();
+
+            if (targetAudioId === 'audio-guru') customGuruLoaded = true;
+            if (targetAudioId === 'audio-shocked') customShockedLoaded = true;
+
+            const statusEl = document.getElementById(statusId);
+            statusEl.textContent = `Terpasang: ${file.name}`;
+            statusEl.className = "text-[10px] font-mono text-emerald-400 mt-1 block";
+        }
+
+        // --- 4. WEB AUDIO API FALLBACK SYNTHESIZER (If .mp3 files aren't in folder yet) ---
+        let audioCtx = null;
+        let guruSynthInterval = null;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Plays a dramatic 1-second "SHOCKED!" sting if shocked-sound-effect.mp3 fails to load
+        function playFallbackShockedSound() {
+            try {
+                initAudioContext();
+                const now = audioCtx.currentTime;
+                const freqs = [587.33, 880, 1174.66, 1760]; // Dramatic high chord impact
+                freqs.forEach((f) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(f, now);
+                    osc.frequency.exponentialRampToValueAtTime(f * 0.82, now + 0.95);
+
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.98);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 1.0);
+                });
+            } catch (e) {
+                console.warn("Web Audio fallback error:", e);
+            }
+        }
+
+        // Plays a 14-second urgent alarm/meme synth loop if guru-hentikan.mp3 fails to load
+        function startFallbackGuruSound() {
+            try {
+                initAudioContext();
+                let step = 0;
+                const playPulse = () => {
+                    if (!audioCtx) return;
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    const baseFreq = step % 2 === 0 ? 440 : 330;
+                    osc.frequency.setValueAtTime(baseFreq, now);
+                    osc.frequency.linearRampToValueAtTime(baseFreq + 120, now + 0.35);
+
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.48);
+                    step++;
+                };
+                playPulse();
+                guruSynthInterval = setInterval(playPulse, 500);
+            } catch (e) {
+                console.warn("Guru fallback audio error:", e);
+            }
+        }
+
+        function stopFallbackGuruSound() {
+            if (guruSynthInterval) {
+                clearInterval(guruSynthInterval);
+                guruSynthInterval = null;
+            }
+        }
+
+        // --- 5. MAIN SURPRISE SEQUENCE TIMELINE (14 SECONDS TOTAL) ---
+        let surpriseTotalTimeout = null;
+        let stopItShowTimeout = null;
+        let stopItHideTimeout = null;
+        let countdownInterval = null;
+
+        function triggerSurpriseSequence() {
+            // Clear any previous timers
+            clearAllSurpriseTimers();
+
+            const overlay = document.getElementById('surpriseOverlay');
+            const stopItWrapper = document.getElementById('stopItWrapper');
+            const shockBadge = document.getElementById('shockBadge');
+            const progressBar = document.getElementById('surpriseProgressBar');
+            const countdownEl = document.getElementById('countdownTimer');
+            const audioGuru = document.getElementById('audio-guru');
+            const audioShocked = document.getElementById('audio-shocked');
+
+            // 1. Show Overlay & Job Application Image
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+
+            // Reset progress bar to 100% and animate down to 0% over 14 seconds
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '100%';
+            void progressBar.offsetWidth; // Force reflow
+            progressBar.style.transition = 'width 14s linear';
+            progressBar.style.width = '0%';
+
+            // 2. Play `guru-hentikan` sound (Duration: 14 seconds)
+            audioGuru.currentTime = 0;
+            audioGuru.play().catch(() => {
+                // If guru-hentikan.mp3 file is missing, trigger 14s synth fallback
+                startFallbackGuruSound();
+            });
+
+            // 3. Trigger `shocked-sound-effect` (1s) + Show `stop-it` image alongside Job Application
+            // Appears for 1 second (1000ms), then fades out
+            stopItWrapper.classList.remove('stop-it-fadeout');
+            stopItWrapper.classList.add('stop-it-visible');
+            shockBadge.classList.remove('hidden');
+
+            audioShocked.currentTime = 0;
+            audioShocked.play().catch(() => {
+                // If shocked-sound-effect.mp3 is missing, play 1s synth impact
+                playFallbackShockedSound();
+            });
+
+            // Stop the shocked audio & fade out the `stop-it` image after exactly 1 second (1000ms)
+            stopItHideTimeout = setTimeout(() => {
+                stopItWrapper.classList.remove('stop-it-visible');
+                stopItWrapper.classList.add('stop-it-fadeout');
+                shockBadge.classList.add('hidden');
+                audioShocked.pause();
+                audioShocked.currentTime = 0;
+            }, 1000);
+
+            // 4. Update visual 14.0s countdown timer
+            const startTime = Date.now();
+            const durationMs = 14000; // 14 seconds
+
+            countdownInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, (durationMs - elapsed) / 1000);
+                countdownEl.textContent = `${remaining.toFixed(1)}s`;
+            }, 100);
+
+            // 5. End entire surprise sequence after 14 seconds (14000ms)
+            surpriseTotalTimeout = setTimeout(() => {
+                stopSurpriseSequence();
+            }, durationMs);
+        }
+
+        function stopSurpriseSequence() {
+            clearAllSurpriseTimers();
+
+            const overlay = document.getElementById('surpriseOverlay');
+            const stopItWrapper = document.getElementById('stopItWrapper');
+            const shockBadge = document.getElementById('shockBadge');
+            const audioGuru = document.getElementById('audio-guru');
+            const audioShocked = document.getElementById('audio-shocked');
+
+            // Stop all audio & fallback synths
+            audioGuru.pause();
+            audioGuru.currentTime = 0;
+            audioShocked.pause();
+            audioShocked.currentTime = 0;
+            stopFallbackGuruSound();
+
+            // Reset UI state
+            stopItWrapper.classList.remove('stop-it-visible');
+            stopItWrapper.classList.add('stop-it-fadeout');
+            shockBadge.classList.add('hidden');
+
+            // Hide overlay back to Student ID Card
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+
+        function clearAllSurpriseTimers() {
+            if (surpriseTotalTimeout) clearTimeout(surpriseTotalTimeout);
+            if (stopItShowTimeout) clearTimeout(stopItShowTimeout);
+            if (stopItHideTimeout) clearTimeout(stopItHideTimeout);
+            if (countdownInterval) clearInterval(countdownInterval);
+            stopFallbackGuruSound();
+        }
+    </script>
+</body>
+</html>
